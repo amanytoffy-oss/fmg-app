@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e8457f">
+<title>FMG – Find My Gift</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#ffffff;--bg2:#ffe3ee;--card:#fff;--text:#3a1f32;--muted:#8d6b80;--pink:#e8457f;--pink2:#f48fb1;--soft:#fbd9e8;--yellow:#fff3c4;--line:#f3cfe0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root[data-theme="dark-off"]{--bg:#26151f;--bg2:#26151f;--card:#35202d;--text:#fbe9f2;--muted:#c79bb3;--soft:#4a2a3b;--yellow:#4d4222;--line:#5a3449;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#26151f;--bg2:#26151f;--card:#35202d;--text:#fbe9f2;--muted:#c79bb3;--soft:#4a2a3b;--yellow:#4d4222;--line:#5a3449;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%) fixed;color:var(--text);font-family:'Tajawal',system-ui,sans-serif;display:flex;justify-content:center}
+#app{position:relative;z-index:1;width:100%;max-width:440px;min-height:100vh;padding:16px 16px 40px}
+h1,h2,h3,p{margin:0}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.logo{font-weight:800;font-size:26px;color:var(--pink)}
+.bub span{background:linear-gradient(180deg,#ffd6e8 0%,#ff9ec7 55%,#ff6fa8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 3px rgba(214,43,120,.35)) drop-shadow(0 6px 8px rgba(214,43,120,.2))}
+.bub span:nth-child(1){font-family:'Fredoka','Tajawal',sans-serif;font-weight:600}
+.bub span:nth-child(2){font-family:'Pacifico','Tajawal',cursive}
+.bub span:nth-child(3){font-family:'Baloo 2','Tajawal',sans-serif;font-weight:800}
+.icon{background:var(--card);border:1px solid var(--line);border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;color:var(--text)}
+.hero{background:linear-gradient(135deg,var(--pink),#b06ad8);color:#fff;border-radius:22px;padding:18px;margin-bottom:16px}
+.hero p{opacity:.9;margin-top:4px;font-size:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+.chip{flex:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 14px;text-align:center;font-size:13px;color:var(--text);font-family:inherit}
+.chip b{display:block;font-size:22px}
+.btn{width:100%;border:0;border-radius:16px;padding:14px;font-size:16px;font-weight:700;font-family:inherit;background:var(--pink);color:#fff;cursor:pointer;margin-top:10px}
+.btn.alt{background:var(--soft);color:var(--pink)}
+.row{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px;cursor:pointer}
+.row .em{font-size:30px;background:var(--soft);border-radius:14px;width:54px;height:54px;display:grid;place-items:center}
+.row small{color:var(--muted)}
+.seg{display:flex;background:var(--soft);border-radius:14px;padding:4px;margin:10px 0}
+.seg button{flex:1;border:0;background:none;border-radius:11px;padding:9px;font-family:inherit;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--pink);color:#fff}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:7px 14px;font-family:inherit;cursor:pointer}
+.tabs button.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gift{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;cursor:pointer;position:relative}
+.gift .pic{font-size:54px;text-align:center;background:var(--soft);border-radius:14px;padding:16px 0;margin-bottom:8px}
+.gift b{display:block;font-size:14px}
+.gift small{color:var(--muted)}
+.badge{position:absolute;top:16px;inset-inline-start:16px;background:var(--pink);color:#fff;font-size:11px;border-radius:10px;padding:2px 8px}
+.gift.res .pic{opacity:.45}
+.big{font-size:100px;text-align:center;background:var(--soft);border-radius:24px;padding:28px 0;margin-bottom:14px}
+.price{display:inline-block;background:var(--soft);color:var(--pink);border-radius:12px;padding:4px 12px;font-weight:700;margin:8px 0}
+.story{background:var(--yellow);border-radius:16px;padding:12px;margin:10px 0;line-height:1.7}
+.note{color:var(--muted);font-size:13px;line-height:1.7;margin-top:8px}
+label{display:block;font-weight:700;margin:12px 0 6px}
+input,textarea{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:12px;font-family:inherit;font-size:15px}
+.sw{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet>div{background:var(--card);width:100%;max-width:440px;border-radius:24px 24px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+#toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:14px;font-size:14px;z-index:30}
+.dots{display:flex;gap:7px;margin-top:26px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--pink);opacity:.3;animation:dotb 1.2s infinite}.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}@keyframes dotb{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}@media (prefers-reduced-motion:reduce){.dots i{animation:none;opacity:.6}}
+.wv span{display:inline-block;animation:wavy 1.5s ease-in-out infinite}.wv span:nth-child(2){animation-delay:.15s}.wv span:nth-child(3){animation-delay:.3s}@keyframes wavy{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-12px) rotate(-5deg)}65%{transform:translateY(5px) rotate(4deg)}}@media (prefers-reduced-motion:reduce){.wv span{animation:none}}
+.mx{display:inline-block;color:var(--pink);font-weight:700;animation:wavys 1.5s ease-in-out infinite}@keyframes wavys{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-4deg)}65%{transform:translateY(3px) rotate(3deg)}}@media (prefers-reduced-motion:reduce){.mx{animation:none}}
+
+.gb{animation:giftb 1.25s ease-in-out both}
+@keyframes giftb{0%{transform:rotate(0) scale(1)}10%{transform:rotate(-9deg) scale(1.03)}20%{transform:rotate(9deg) scale(1.06)}30%{transform:rotate(-11deg) scale(1.08)}40%{transform:rotate(11deg) scale(1.1)}50%{transform:rotate(-8deg) scale(1.12)}60%{transform:rotate(8deg) scale(1.14)}70%{transform:rotate(0) scale(1.18)}78%{transform:scale(1.42)}100%{transform:rotate(0) scale(1)}}
+.ring{position:absolute;left:50%;top:50%;width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;background:radial-gradient(circle,rgba(255,207,63,.8),rgba(232,69,127,.35) 60%,transparent 70%);opacity:0;animation:ringb 1.5s ease-out .9s forwards}
+@keyframes ringb{0%{opacity:.95;transform:scale(.6)}100%{opacity:0;transform:scale(3.2)}}
+.sp{position:absolute;left:50%;top:50%;margin:-14px 0 0 -14px;font-size:28px;opacity:0;animation:fly 3.4s cubic-bezier(.2,.55,.4,1) forwards}
+@keyframes fly{0%{opacity:0;transform:translate(0,0) scale(.3) rotate(0)}8%{opacity:1}92%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(var(--rot))}}
+.rev{position:relative;z-index:2;opacity:0;animation:rev .7s ease-out forwards}
+@keyframes rev{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.rev{opacity:1;animation:none}.sp,.ring,.wash{display:none}.gb{animation:none}}
+.wash{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#ffe3ee,#ffc9de);opacity:0;animation:washin .7s ease-out .9s forwards}@keyframes washin{to{opacity:1}}
+.hero2{background:linear-gradient(135deg,var(--pink),#b06ad8);color:#fff;border-radius:22px;padding:18px;margin-bottom:16px}
+.hero2 h2{font-size:22px}.hero2 p{opacity:.92;margin-top:4px;font-size:14px}
+.hero2 .big2{font-size:44px;line-height:1;margin-bottom:6px}
+.err{color:#c4224f;font-size:14px;margin-top:8px;min-height:1em}
+.lnk{background:none;border:0;color:var(--pink);font-family:inherit;font-weight:700;cursor:pointer;padding:6px;font-size:14px}
+.danger{background:#fde3ea;color:#c4224f}
+.res .badge{background:#8d6b80}
+.mini{font-size:12px;color:var(--muted)}
+.ecard{background:var(--yellow);border-radius:16px;padding:12px;margin:10px 0;line-height:1.8}
+.tag{display:inline-block;background:var(--soft);color:var(--pink);border-radius:10px;padding:2px 10px;font-size:12px;font-weight:700;margin-inline-end:6px}
+.emgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:6px}
+.emgrid button{border:0;background:var(--soft);border-radius:10px;font-size:20px;padding:6px 0;cursor:pointer}
+.pricebox{display:flex;align-items:center;gap:8px}.pricebox input{width:90px;text-align:center}
+.sheet>div{max-height:88vh;overflow:auto}
+a.btn{display:block;text-align:center;text-decoration:none}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var ICON='<svg viewBox="0 0 512 512" style="display:block;width:100%;height:100%"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7aa8"/><stop offset="1" stop-color="#e8457f"/></linearGradient></defs><rect width="512" height="512" fill="url(#sg)"/><circle cx="420" cy="90" r="120" fill="#fff" opacity=".08"/><rect x="148" y="276" width="216" height="138" rx="22" fill="#ffe3ee"/><rect x="124" y="222" width="264" height="64" rx="20" fill="#fff"/><rect x="236" y="222" width="40" height="192" fill="#ffcf3f"/><path d="M256 214 C214 150 150 160 168 204 C178 228 230 222 256 214Z" fill="#ffcf3f"/><path d="M256 214 C298 150 362 160 344 204 C334 228 282 222 256 214Z" fill="#ffcf3f"/><circle cx="256" cy="212" r="22" fill="#ffb800"/><g transform="translate(398 128) rotate(12)"><path d="M0 28 C-40 4 -28 -26 -8 -22 C-3 -21 -1 -18 0 -15 C1 -18 3 -21 8 -22 C28 -26 40 4 0 28Z" fill="#fff"/></g><path transform="translate(112 132)" d="M0 -18 L5 -5 L18 0 L5 5 L0 18 L-5 5 L-18 0 L-5 -5Z" fill="#fff" opacity=".9"/></svg>';
+function burstHTML(){var B=['💗','💓','💕','💖','💝','🎉','🎀','🎁','💸','💎','🧸','🎈','📱','🚗','🎂'],L=B.concat(B).sort(function(){return Math.random()-.5}),h='';L.forEach(function(e,i){var a=i/L.length*2*Math.PI+(Math.random()-.5)*.3,d=Math.max(window.innerWidth,window.innerHeight)*(.55+Math.random()*.6);h+='<span class="sp" style="--dx:'+Math.round(Math.cos(a)*d)+'px;--dy:'+Math.round(Math.sin(a)*d)+'px;--rot:'+Math.round((Math.random()-.5)*360)+'deg;font-size:'+(24+Math.round(Math.random()*10))+'px;animation-delay:'+(.9+Math.random()*.1).toFixed(2)+'s">'+e+'</span>'});return h}
+var SND=null;
+function mkWav(){var R=22050,N=Math.floor(R*3.4),d=new Float32Array(N),i,k,seed=7;
+function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
+function blip(t0,f0,f1,len,vol){var s0=Math.floor(t0*R),n=Math.floor(len*R),ph=0;for(k=0;k<n&&s0+k<N;k++){var u=k/n,fr=f0+(f1-f0)*Math.pow(u,.6);ph+=2*Math.PI*fr/R;var env=Math.min(1,k/(R*.002))*Math.pow(1-u,2.2);d[s0+k]+=Math.sin(ph)*env*vol}}
+function noise(t0,len,vol,hp,rise){var s0=Math.floor(t0*R),n=Math.floor(len*R),pv=0,lp=0;for(k=0;k<n&&s0+k<N;k++){var u=k/n,x=rnd()*2-1;lp+=(x-lp)*(hp);var y=x-lp;var env=rise?Math.sin(Math.PI*u):Math.pow(1-u,3);d[s0+k]+=y*env*vol}}
+noise(0,.09,1.0,.05);blip(0,260,110,.12,.9);
+noise(.05,1.1,.18,.2,true);
+for(i=0;i<26;i++){var t=.55+i*.1+rnd()*.06;var f=900+rnd()*1900;blip(t,f,f*(1.5+rnd()*.5),.07+rnd()*.05,.38)}
+for(i=0;i<14;i++){noise(.6+rnd()*2.3,.05,.22,.3)}
+blip(2.55,1568,1568,.8,.35);blip(2.7,2093,2093,.9,.3);
+var mx=0;for(i=0;i<N;i++)if(Math.abs(d[i])>mx)mx=Math.abs(d[i]);var g=.95/(mx||1);
+var d2=new Int16Array(N);for(i=0;i<N;i++)d2[i]=Math.max(-32768,Math.min(32767,d[i]*g*32767));d=d2;
+for(i=0;i<N;i++){if(d[i]>32767)d[i]=32767;if(d[i]<-32768)d[i]=-32768}
+var h=new ArrayBuffer(44+N*2),v=new DataView(h);function ws(o,t){for(var q=0;q<t.length;q++)v.setUint8(o+q,t.charCodeAt(q))}
+ws(0,'RIFF');v.setUint32(4,36+N*2,true);ws(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,R,true);v.setUint32(28,R*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,N*2,true);
+for(i=0;i<N;i++)v.setInt16(44+i*2,d[i],true);
+var u8=new Uint8Array(h),bin='';for(i=0;i<u8.length;i+=8192)bin+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));
+return 'data:audio/wav;base64,'+btoa(bin)}
+function audio(){try{if(!SND){SND=new Audio(mkWav());SND.preload='auto';SND.volume=1}return SND}catch(e){return null}}
+function unlock(){var a=audio();if(!a)return;try{a.muted=true;var r=a.play();var fin=function(){a.pause();a.currentTime=0;a.muted=false};if(r&&r.then)r.then(fin,function(){a.muted=false});else fin()}catch(e){}}
+function boom(onFail){var a=audio();if(!a){onFail();return}try{a.muted=false;a.currentTime=0;var r=a.play();if(r&&r.catch)r.catch(onFail)}catch(e){onFail()}}
+
+function splashHTML(){return '<div onclick="splashDone()" style="position:relative;min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;cursor:pointer;overflow:hidden"><div style="position:relative;z-index:1;width:112px;height:112px;margin-bottom:12px"><span class="ring"></span><div class="gb" style="width:112px;height:112px;border-radius:22.37%;overflow:hidden;box-shadow:0 8px 22px rgba(232,69,127,.3)">'+ICON+'</div>'+burstHTML()+'</div><div class="rev" style="animation-delay:1.3s;font-weight:800;font-size:72px;line-height:1;color:var(--pink);letter-spacing:1px;direction:ltr">FMG</div><div class="rev" style="animation-delay:1.5s;font-size:15px;letter-spacing:3px;color:var(--muted);font-weight:700;direction:ltr">FIND MY GIFT</div><div class="rev" style="animation-delay:1.7s;margin-top:14px;font-weight:500">قوائم هدايا لكل مناسباتك</div><div class="dots rev" style="animation-delay:1.9s"><i></i><i></i><i></i></div><div id="snd" onclick="event.stopPropagation();unlock();vSplash()" style="display:none;position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 14px;font-size:13px;color:var(--muted);z-index:3;white-space:nowrap">🔊 اضغطي لتشغيل الصوت</div></div>'}
+var _spDone=null;
+function splashDone(){clearTimeout(window._spT);clearTimeout(window._spS);if(_spDone){var f=_spDone;_spDone=null;f()}}
+function splashTimers(cb){_spDone=cb;clearTimeout(window._spT);clearTimeout(window._spS);window._spT=setTimeout(splashDone,5600);window._spS=setTimeout(function(){boom(function(){var c=document.getElementById('snd');if(c)c.style.display='block'})},950)}
+document.addEventListener('pointerdown',function(){unlock()},{once:true});
+
+
+/* ================= FMG app ================= */
+var cfg=window.FMG_CONFIG||{},sb=null;
+try{if(cfg.url&&cfg.key&&window.supabase)sb=window.supabase.createClient(cfg.url,cfg.key)}catch(e){}
+var S={user:null,profile:null,data:null,lists:[],modal:null,ask:'',auth:'in',err:'',hours:24,busy:false,pub:null};
+var OCC=[['🎂','عيد ميلاد'],['💍','زواج'],['🎓','تخرج'],['👶','مولود جديد'],['🏠','بيت جديد'],['🎁','مناسبة ثانية']];
+var EMS=['🎁','👜','🧴','🎧','⌚','☕','👟','📚','🕯️','💍','📱','💻','👗','🧸','🌸','🍫'];
+var app=document.getElementById('app');
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function toast(t){var d=document.createElement('div');d.id='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
+function fmt(n){return n?Number(n).toLocaleString('en-US')+' د.ع':'بدون سعر'}
+function fixUrl(u){u=(u||'').trim();if(!u)return'';if(!/^https?:\/\//i.test(u))u='https://'+u;return u}
+function leftTxt(iso){var m=Math.max(0,new Date(iso).getTime()-Date.now()),h=Math.ceil(m/3600000);return h>=48?Math.ceil(h/24)+' يوم':h+' ساعة'}
+function base(){return location.origin+location.pathname}
+function listUrl(id){return base()+'#/l/'+id}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function nav(h){if(location.hash==='#'+h)route();else location.hash=h}
+function shareLink(url,title){
+  if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});return}
+  try{navigator.clipboard.writeText(url).then(function(){toast('تم نسخ الرابط')},function(){toast(url)})}catch(e){toast(url)}
+}
+
+function topbar(){
+  var r=S.user?'<button class="icon" onclick="nav(\'/me\')" aria-label="حسابي">'+esc(Array.from((S.profile&&S.profile.display_name)||'👤')[0])+'</button>':'<span></span>';
+  return '<div class="top"><div class="logo" style="cursor:pointer" onclick="nav(\'/\')">FMG ♡</div>'+r+'</div>';
+}
+function setApp(h){app.innerHTML=h;window.scrollTo(0,0)}
+
+/* ---------- الشاشات ---------- */
+function vSetup(){setApp('<div style="padding-top:60px;text-align:center"><div style="font-size:56px">🛠️</div><h2>باقي ربط قاعدة البيانات</h2><p class="note">افتحي الملف <b>config.js</b> وحطي رابط ومفتاح مشروع Supabase. الخطوات بملف README.</p></div>')}
+
+function vSplash(){
+  setApp(splashHTML());splashTimers(function(){try{sessionStorage.setItem('fmg_sp','1')}catch(e){}route()});
+}
+
+function vAuth(){
+  var up=S.auth==='up';
+  setApp(topbar()+'<div class="hero2"><div class="big2">🎁</div><h2>'+(up?'سوّي حساب جديد':'أهلاً بيج')+'</h2><p>قوائم هدايا تشاركينها مع أحبابج</p></div>'+
+  '<label>الإيميل</label><input id="em" type="email" autocomplete="email" dir="ltr" style="text-align:left">'+
+  '<label>كلمة المرور</label><input id="pw" type="password" autocomplete="'+(up?'new-password':'current-password')+'" dir="ltr" style="text-align:left" placeholder="6 أحرف على الأقل">'+
+  '<div class="err" id="er">'+esc(S.err)+'</div>'+
+  '<button class="btn" id="ab" onclick="doAuth()">'+(up?'إنشاء الحساب':'دخول')+'</button>'+
+  '<div style="text-align:center;margin-top:12px"><button class="lnk" onclick="S.auth=\''+(up?'in':'up')+'\';S.err=\'\';vAuth()">'+(up?'عندي حساب – دخول':'ما عندي حساب – سجّلي')+'</button></div>');
+}
+function doAuth(){
+  var e=$('em').value.trim(),p=$('pw').value;
+  if(!e||p.length<6){S.err='اكتبي إيميل صحيح وكلمة مرور 6 أحرف أو أكثر';$('er').textContent=S.err;return}
+  $('ab').disabled=true;
+  var up=S.auth==='up',pr=up?sb.auth.signUp({email:e,password:p}):sb.auth.signInWithPassword({email:e,password:p});
+  pr.then(function(r){
+    $('ab').disabled=false;
+    if(r.error){S.err=/invalid login/i.test(r.error.message)?'الإيميل أو كلمة المرور غلط':/registered/i.test(r.error.message)?'هذا الإيميل مسجّل، سجّلي دخول':'صار خطأ: '+r.error.message;$('er').textContent=S.err;return}
+    S.err='';
+    if(up&&!r.data.session){setApp(topbar()+'<div style="text-align:center;padding-top:50px"><div style="font-size:56px">📩</div><h2>تأكدي من إيميلج</h2><p class="note">أرسلنا رابط تفعيل. اضغطيه وبعدها ارجعي سجّلي دخول.</p></div>')}
+  });
+}
+
+function vOnboard(){
+  setApp(topbar()+'<div class="hero2"><div class="big2">✨</div><h2>خطوة أخيرة</h2><p>اختاري اسم ويوزر لرابطج</p></div>'+
+  '<label>اسمج (يظهر لأصدقائج)</label><input id="dn" maxlength="30">'+
+  '<label>اليوزر (حروف إنجليزية وأرقام و _)</label><input id="un" dir="ltr" style="text-align:left" maxlength="20" placeholder="amani_gifts">'+
+  '<div class="err" id="er"></div><button class="btn" onclick="saveProfile()">حفظ</button>');
+}
+function saveProfile(){
+  var d=$('dn').value.trim(),u=$('un').value.trim().toLowerCase();
+  if(!d){$('er').textContent='اكتبي اسمج';return}
+  if(!/^[a-z0-9_]{3,20}$/.test(u)){$('er').textContent='اليوزر: 3-20 حرف إنجليزي صغير أو رقم أو _';return}
+  var isNew=!S.profile,q=isNew?sb.from('profiles').insert({id:S.user.id,username:u,display_name:d}):sb.from('profiles').update({username:u,display_name:d}).eq('id',S.user.id);
+  q.then(function(r){
+    if(r.error){$('er').textContent=r.error.code==='23505'?'هذا اليوزر مأخوذ، جربي غيره':'صار خطأ: '+r.error.message;return}
+    S.profile={id:S.user.id,username:u,display_name:d};toast('تم الحفظ 💗');nav('/')
+  });
+}
+
+function vHome(){
+  var p=S.profile,h=topbar()+'<div class="hero2"><h2>هلا '+esc(p.display_name)+' 💗</h2><p>رابط صفحتج: <span dir="ltr">@'+esc(p.username)+'</span></p>'+
+  '<button class="btn alt" style="margin-top:12px" onclick="shareLink(base()+\'#/u/'+esc(p.username)+'\',\'قوائم هدايا '+esc(p.display_name)+'\')">🔗 شاركي صفحتج</button></div>';
+  if(!S.lists.length)h+='<div style="text-align:center;padding:24px 0"><div style="font-size:52px">🎀</div><p class="note">ما عندج قوائم بعد. سوّي أول قائمة!</p></div>';
+  S.lists.forEach(function(l){h+='<div class="row" onclick="nav(\'/l/'+l.id+'\')"><div class="em">'+esc(l.emoji)+'</div><div><b>'+esc(l.title)+'</b></div></div>'});
+  setApp(h+'<button class="btn" onclick="nav(\'/new\')">+ قائمة جديدة</button>');
+}
+
+function vNew(){
+  S.occ=0;
+  var h=topbar()+'<h2 style="margin-bottom:6px">قائمة جديدة</h2><label>المناسبة</label><div class="chips" style="flex-wrap:wrap">';
+  OCC.forEach(function(o,i){h+='<button class="chip" id="oc'+i+'" onclick="pickOcc('+i+')" style="'+(i===0?'border-color:var(--pink);background:var(--soft)':'')+'"><b>'+o[0]+'</b>'+o[1]+'</button>'});
+  setApp(h+'</div><label>اسم القائمة</label><input id="ln" maxlength="60" placeholder="مثلاً: عيد ميلادي"><div class="err" id="er"></div><button class="btn" onclick="saveList()">إنشاء</button>');
+}
+function pickOcc(i){S.occ=i;OCC.forEach(function(o,j){var b=$('oc'+j);b.style.borderColor=j===i?'var(--pink)':'';b.style.background=j===i?'var(--soft)':''});var n=$('ln');if(!n.value)n.value=OCC[i][1]==='مناسبة ثانية'?'':OCC[i][1]+' '+esc(S.profile.display_name)}
+function saveList(){
+  var t=$('ln').value.trim();if(!t){$('er').textContent='اكتبي اسم القائمة';return}
+  sb.from('lists').insert({owner:S.user.id,title:t,emoji:OCC[S.occ][0]}).select().single().then(function(r){
+    if(r.error){$('er').textContent='صار خطأ: '+r.error.message;return}nav('/l/'+r.data.id)})
+}
+
+function vUser(){
+  var p=S.pub;
+  if(!p){setApp(topbar()+'<div style="text-align:center;padding-top:50px"><div style="font-size:56px">🔎</div><h2>ما لقينا هذا اليوزر</h2></div>');return}
+  var h=topbar()+'<div class="hero2"><div class="big2">🎁</div><h2>'+esc(p.profile.display_name)+'</h2><p dir="ltr" style="text-align:right">@'+esc(p.profile.username)+'</p></div>';
+  if(!p.lists.length)h+='<p class="note" style="text-align:center">ما عندها قوائم بعد</p>';
+  p.lists.forEach(function(l){h+='<div class="row" onclick="nav(\'/l/'+l.id+'\')"><div class="em">'+esc(l.emoji)+'</div><div><b>'+esc(l.title)+'</b></div></div>'});
+  setApp(h);
+}
+
+function vList(){
+  var d=S.data;
+  if(!d){setApp(topbar()+'<div style="text-align:center;padding-top:50px"><div style="font-size:56px">🔎</div><h2>القائمة غير موجودة</h2></div>');return}
+  var L=d.list,own=d.mine,h=topbar()+'<div class="hero2"><div class="big2">'+esc(L.emoji)+'</div><h2>'+esc(L.title)+'</h2><p>'+(own?'قائمتج':'قائمة '+esc(d.owner?d.owner.display_name:''))+'</p></div>';
+  if(own)h+='<div style="display:flex;gap:8px"><button class="btn" style="margin:0" onclick="shareLink(listUrl(\''+L.id+'\'),\''+esc(L.title).replace(/'/g,'')+'\')">🔗 شاركي القائمة</button><button class="btn alt" style="margin:0" onclick="openForm(null)">+ هدية</button></div><div style="height:14px"></div>';
+  if(!d.gifts.length)h+='<div style="text-align:center;padding:24px 0"><div style="font-size:52px">🎀</div><p class="note">'+(own?'ما ضفتي هدايا بعد. اضغطي + هدية.':'القائمة فاضية حالياً')+'</p></div>';
+  h+='<div class="grid">';
+  d.gifts.forEach(function(g){
+    h+='<div class="gift'+(g.reserved?' res':'')+'" onclick="openGift(\''+g.id+'\')"><div class="pic">'+esc(g.emoji)+'</div>'+(g.reserved?'<span class="badge">'+(g.received?'تم الاستلام 🎁':'محجوزة 🔒')+'</span>':'')+'<b>'+esc(g.name)+'</b><small>'+fmt(g.price)+'</small></div>';
+  });
+  h+='</div>';
+  if(own)h+='<div style="text-align:center;margin-top:22px"><button class="lnk" style="color:#c4224f" onclick="askDelList()">'+(S.ask==='dl'?'اضغطي مرة ثانية لتأكيد حذف القائمة':'حذف القائمة')+'</button></div>';
+  else if(!S.user)h+='<div style="text-align:center;margin-top:24px" class="note">تريدين قائمة هدايا خاصة بيج؟ <button class="lnk" onclick="nav(\'/\')">سوّي حسابج</button></div>';
+  setApp(h+modalHTML());
+}
+function askDelList(){
+  if(S.ask!=='dl'){S.ask='dl';vList();return}
+  sb.from('lists').delete().eq('id',S.data.list.id).then(function(r){S.ask='';if(r.error)return toast('صار خطأ');toast('تم حذف القائمة');nav('/')})
+}
+function gOf(id){return (S.data.gifts||[]).filter(function(g){return g.id===id})[0]}
+function openGift(id){S.modal={t:'gift',id:id};S.ask='';S.hours=24;vList()}
+function openForm(id){S.modal={t:'form',id:id};vList()}
+function closeM(){S.modal=null;S.ask='';vList()}
+
+function modalHTML(){
+  var m=S.modal;if(!m)return'';
+  var h='<div class="sheet" onclick="if(event.target===this)closeM()"><div>';
+  if(m.t==='form'){
+    var g=m.id?gOf(m.id):{name:'',emoji:'🎁',price:null,link:'',store:'',story:''};
+    h+='<h2>'+(m.id?'تعديل الهدية':'هدية جديدة')+'</h2><label>اسم الهدية *</label><input id="fn" maxlength="100" value="'+esc(g.name)+'">'+
+    '<label>أيقونة (اختياري)</label><input id="fe" maxlength="4" value="'+esc(g.emoji)+'" style="text-align:center;font-size:24px"><div class="emgrid">';
+    EMS.forEach(function(e){h+='<button type="button" onclick="$(\'fe\').value=\''+e+'\'">'+e+'</button>'});
+    h+='</div><label>السعر التقريبي (بالآلاف، اختياري)</label><div class="pricebox"><input id="fp" inputmode="numeric" value="'+(g.price?Math.round(g.price/1000):'')+'" oninput="this.value=this.value.replace(/[^0-9]/g,\'\').slice(0,6)"><b>,000 د.ع</b></div>'+
+    '<label>رابط الهدية (اختياري)</label><input id="fl" dir="ltr" style="text-align:left" value="'+esc(g.link||'')+'">'+
+    '<label>وين تنباع (اختياري)</label><input id="fs" maxlength="80" value="'+esc(g.store||'')+'">'+
+    '<label>قصة الهدية (اختياري)</label><textarea id="fy" rows="3" maxlength="500">'+esc(g.story||'')+'</textarea><div class="err" id="er"></div>'+
+    '<button class="btn" onclick="saveGift('+(m.id?'\''+m.id+'\'':'null')+')">حفظ</button><button class="btn alt" onclick="'+(m.id?'openGift(\''+m.id+'\')':'closeM()')+'">رجوع</button>';
+  }else{
+    var x=gOf(m.id);if(!x){return''}
+    h+='<div style="font-size:64px;text-align:center">'+esc(x.emoji)+'</div><h2 style="text-align:center">'+esc(x.name)+'</h2><div style="text-align:center"><span class="price">'+fmt(x.price)+'</span></div>';
+    if(x.store)h+='<p class="note">🛍️ '+esc(x.store)+'</p>';
+    if(x.link)h+='<a class="btn alt" target="_blank" rel="noopener" href="'+esc(fixUrl(x.link))+'">🔗 فتح رابط الهدية</a>';
+    if(x.story)h+='<div class="story">'+esc(x.story)+'</div>';
+    if(S.data.mine){
+      if(x.received&&(x.by||x.message))h+='<div class="ecard"><b>🎁 من '+esc(x.by||'مجهول')+'</b>'+(x.message?'<br>'+esc(x.message):'')+'</div>';
+      else if(x.received)h+='<div class="ecard"><b>🎁 من شخص مجهول</b></div>';
+      else if(x.reserved)h+='<div class="ecard">🎀 أحد حجزها لج! ما راح تعرفين منو إلا بعد ما تضغطين "استلمتها".</div>';
+      h+=(x.reserved&&!x.received?'<button class="btn" onclick="markGot(\''+x.id+'\')">استلمتها 🎁 (اكشفي الاسم والكارت)</button>':'')+
+      '<button class="btn alt" onclick="openForm(\''+x.id+'\')">✏️ تعديل</button><button class="btn danger" onclick="askDelGift(\''+x.id+'\')">'+(S.ask==='dg'?'اضغطي مرة ثانية للتأكيد':'🗑️ حذف')+'</button>';
+    }else{
+      var tok=lsGet('fmg_tok_'+x.id);
+      if(x.received)h+='<div class="ecard">هذي الهدية انستلمت 🎁</div>';
+      else if(x.reserved){
+        h+='<div class="ecard">🔒 محجوزة'+(x.by?' من <b>'+esc(x.by)+'</b>':' (من شخص مجهول)')+' — تنتهي بعد '+leftTxt(x.until)+'</div>';
+        if(tok)h+='<button class="btn alt" onclick="cancelRes(\''+x.id+'\')">إلغاء حجزي</button>';
+      }else{
+        h+='<label>اسمج (اختياري – اتركيه فاضي تبقين مجهولة)</label><input id="rn" maxlength="40" value="'+esc(lsGet('fmg_name')||'')+'">'+
+        '<label>مدة الحجز</label><div class="seg" id="sg">'+[[24,'24 ساعة'],[48,'48 ساعة'],[168,'أسبوع']].map(function(a){return '<button class="'+(S.hours===a[0]?'on':'')+'" onclick="setHours('+a[0]+')">'+a[1]+'</button>'}).join('')+'</div>'+
+        '<p class="mini">بعد انتهاء المدة ترجع الهدية متاحة للكل.</p>'+
+        '<label>كارت إلكتروني لصاحبة الهدية (اختياري)</label><textarea id="rm" rows="2" maxlength="500" placeholder="اكتبي لها كلمة حلوة 💗"></textarea><div class="err" id="er"></div>'+
+        '<button class="btn" onclick="reserve(\''+x.id+'\')">🎀 احجزي الهدية</button>';
+      }
+    }
+    h+='<button class="btn alt" onclick="closeM()">إغلاق</button>';
+  }
+  return h+'</div></div>';
+}
+function setHours(n){S.hours=n;var b=document.querySelectorAll('#sg button');var v=[24,48,168];for(var i=0;i<b.length;i++)b[i].className=v[i]===n?'on':''}
+
+function saveGift(id){
+  var n=$('fn').value.trim();if(!n){$('er').textContent='اكتبي اسم الهدية';return}
+  var pr=parseInt($('fp').value,10),row={name:n,emoji:($('fe').value.trim()||'🎁'),price:pr?pr*1000:null,link:$('fl').value.trim()||null,store:$('fs').value.trim()||null,story:$('fy').value.trim()||null};
+  var q=id?sb.from('gifts').update(row).eq('id',id):sb.from('gifts').insert(Object.assign({list_id:S.data.list.id},row));
+  q.then(function(r){if(r.error){$('er').textContent='صار خطأ: '+r.error.message;return}S.modal=null;toast('تم الحفظ 💗');loadList(S.data.list.id)})
+}
+function askDelGift(id){
+  if(S.ask!=='dg'){S.ask='dg';vList();return}
+  sb.from('gifts').delete().eq('id',id).then(function(r){S.ask='';S.modal=null;if(r.error)return toast('صار خطأ');toast('تم الحذف');loadList(S.data.list.id)})
+}
+function markGot(id){sb.from('gifts').update({received:true}).eq('id',id).then(function(r){if(r.error)return toast('صار خطأ');loadList(S.data.list.id)})}
+function reserve(id){
+  var nm=$('rn').value.trim(),msg=$('rm').value.trim();
+  sb.rpc('reserve_gift',{p_gift:id,p_name:nm,p_message:msg,p_hours:S.hours}).then(function(r){
+    if(r.error){var t=r.error.message||'';$('er').textContent=/taken/.test(t)?'أحد سبقج وحجزها 🙈':/owner/.test(t)?'ما تكدرين تحجزين هدية من قائمتج':'صار خطأ، جربي مرة ثانية';return}
+    lsSet('fmg_tok_'+id,r.data);if(nm)lsSet('fmg_name',nm);toast('تم الحجز 🎀');loadList(S.data.list.id)
+  })
+}
+function cancelRes(id){
+  sb.rpc('cancel_reservation',{p_gift:id,p_token:lsGet('fmg_tok_'+id)}).then(function(){toast('تم إلغاء الحجز');loadList(S.data.list.id)})
+}
+
+function vMe(){
+  var p=S.profile;
+  setApp(topbar()+'<h2>حسابي</h2><label>اسمج</label><input id="dn" maxlength="30" value="'+esc(p.display_name)+'"><label>اليوزر</label><input id="un" dir="ltr" style="text-align:left" maxlength="20" value="'+esc(p.username)+'"><div class="err" id="er"></div>'+
+  '<button class="btn" onclick="saveProfile()">حفظ</button><button class="btn alt" onclick="sb.auth.signOut().then(function(){S.profile=null;S.user=null;nav(\'/\')})">تسجيل خروج</button>');
+}
+
+/* ---------- تحميل البيانات والتنقل ---------- */
+function loadList(id){
+  sb.rpc('get_list',{p_id:id}).then(function(r){S.data=r.error?null:r.data;vList()})
+}
+function route(){
+  if(!sb){vSetup();return}
+  var p=location.hash.replace(/^#\/?/,'').split('/'),a=p[0]||'',b=p[1]||'';
+  S.modal=null;S.ask='';
+  if(a==='l'&&b){return loadList(b)}
+  if(a==='u'&&b){
+    sb.from('profiles').select('id,username,display_name').eq('username',b.toLowerCase()).maybeSingle().then(function(r){
+      if(!r.data){S.pub=null;return vUser()}
+      sb.from('lists').select('id,title,emoji').eq('owner',r.data.id).order('created_at',{ascending:false}).then(function(q){S.pub={profile:r.data,lists:q.data||[]};vUser()})
+    });return
+  }
+  if(!S.user){
+    if(!sessionStorage.getItem('fmg_sp')&&a===''){return vSplash()}
+    return vAuth()
+  }
+  if(!S.profile){return vOnboard()}
+  if(a==='new')return vNew();
+  if(a==='me')return vMe();
+  sb.from('lists').select('id,title,emoji').eq('owner',S.user.id).order('created_at',{ascending:false}).then(function(r){S.lists=r.data||[];vHome()})
+}
+function loadSession(cb){
+  sb.auth.getSession().then(function(r){
+    S.user=r.data&&r.data.session?r.data.session.user:null;
+    if(!S.user){S.profile=null;return cb()}
+    sb.from('profiles').select('*').eq('id',S.user.id).maybeSingle().then(function(q){S.profile=q.data||null;cb()})
+  })
+}
+if(sb){
+  loadSession(route);
+  sb.auth.onAuthStateChange(function(ev,ses){var id=ses&&ses.user?ses.user.id:null;if((ev==='SIGNED_IN'||ev==='SIGNED_OUT')&&id!==(S.user&&S.user.id))loadSession(route)});
+  window.addEventListener('hashchange',route);
+}else vSetup();
+</script>
+</body>
+</html>
