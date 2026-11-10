@@ -135,7 +135,7 @@ var OCC=[['🎂','عيد ميلاد'],['💍','زواج'],['🎓','تخرج'],['
 var EMS=['🎁','👜','🧴','🎧','⌚','☕','👟','📚','🕯️','💍','📱','💻','👗','🧸','🌸','🍫'];
 var app=document.getElementById('app');
 function $(i){return document.getElementById(i)}
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function toast(t){var d=document.createElement('div');d.id='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
 function fmt(n){return n?Number(n).toLocaleString('en-US')+' د.ع':'بدون سعر'}
 function fixUrl(u){u=(u||'').trim();if(!u)return'';if(!/^https?:\/\//i.test(u))u='https://'+u;return u}
@@ -144,6 +144,12 @@ function base(){return location.origin+location.pathname}
 function listUrl(id){return base()+'#/l/'+id}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function ssGet(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
+function ssSet(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}
+function myTokens(){var t=[];try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('fmg_tok_')===0){var v=localStorage.getItem(k);if(/^[0-9a-f-]{36}$/i.test(v||''))t.push(v)}}}catch(e){}return t}
+function shareMe(){var p=S.profile;if(p)shareLink(base()+'#/u/'+encodeURIComponent(p.username),'قوائم هدايا '+p.display_name)}
+function shareList(){var L=S.data&&S.data.list;if(L)shareLink(listUrl(L.id),L.title)}
 function nav(h){if(location.hash==='#'+h)route();else location.hash=h}
 function shareLink(url,title){
   if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});return}
@@ -160,7 +166,7 @@ function setApp(h){app.innerHTML=h;window.scrollTo(0,0)}
 function vSetup(){setApp('<div style="padding-top:60px;text-align:center"><div style="font-size:56px">🛠️</div><h2>باقي ربط قاعدة البيانات</h2><p class="note">افتحي الملف <b>config.js</b> وحطي رابط ومفتاح مشروع Supabase. الخطوات بملف README.</p></div>')}
 
 function vSplash(){
-  setApp(splashHTML());splashTimers(function(){try{sessionStorage.setItem('fmg_sp','1')}catch(e){}route()});
+  setApp(splashHTML());splashTimers(function(){ssSet('fmg_sp','1');route()});
 }
 
 function vAuth(){
@@ -204,7 +210,7 @@ function saveProfile(){
 
 function vHome(){
   var p=S.profile,h=topbar()+'<div class="hero2"><h2>هلا '+esc(p.display_name)+' 💗</h2><p>رابط صفحتج: <span dir="ltr">@'+esc(p.username)+'</span></p>'+
-  '<button class="btn alt" style="margin-top:12px" onclick="shareLink(base()+\'#/u/'+esc(p.username)+'\',\'قوائم هدايا '+esc(p.display_name)+'\')">🔗 شاركي صفحتج</button></div>';
+  '<button class="btn alt" style="margin-top:12px" onclick="shareMe()">🔗 شاركي صفحتج</button></div>';
   if(!S.lists.length)h+='<div style="text-align:center;padding:24px 0"><div style="font-size:52px">🎀</div><p class="note">ما عندج قوائم بعد. سوّي أول قائمة!</p></div>';
   S.lists.forEach(function(l){h+='<div class="row" onclick="nav(\'/l/'+l.id+'\')"><div class="em">'+esc(l.emoji)+'</div><div><b>'+esc(l.title)+'</b></div></div>'});
   setApp(h+'<button class="btn" onclick="nav(\'/new\')">+ قائمة جديدة</button>');
@@ -216,7 +222,7 @@ function vNew(){
   OCC.forEach(function(o,i){h+='<button class="chip" id="oc'+i+'" onclick="pickOcc('+i+')" style="'+(i===0?'border-color:var(--pink);background:var(--soft)':'')+'"><b>'+o[0]+'</b>'+o[1]+'</button>'});
   setApp(h+'</div><label>اسم القائمة</label><input id="ln" maxlength="60" placeholder="مثلاً: عيد ميلادي"><div class="err" id="er"></div><button class="btn" onclick="saveList()">إنشاء</button>');
 }
-function pickOcc(i){S.occ=i;OCC.forEach(function(o,j){var b=$('oc'+j);b.style.borderColor=j===i?'var(--pink)':'';b.style.background=j===i?'var(--soft)':''});var n=$('ln');if(!n.value)n.value=OCC[i][1]==='مناسبة ثانية'?'':OCC[i][1]+' '+esc(S.profile.display_name)}
+function pickOcc(i){S.occ=i;OCC.forEach(function(o,j){var b=$('oc'+j);b.style.borderColor=j===i?'var(--pink)':'';b.style.background=j===i?'var(--soft)':''});var n=$('ln');if(!n.value)n.value=OCC[i][1]==='مناسبة ثانية'?'':OCC[i][1]+' '+S.profile.display_name}
 function saveList(){
   var t=$('ln').value.trim();if(!t){$('er').textContent='اكتبي اسم القائمة';return}
   sb.from('lists').insert({owner:S.user.id,title:t,emoji:OCC[S.occ][0]}).select().single().then(function(r){
@@ -236,7 +242,7 @@ function vList(){
   var d=S.data;
   if(!d){setApp(topbar()+'<div style="text-align:center;padding-top:50px"><div style="font-size:56px">🔎</div><h2>القائمة غير موجودة</h2></div>');return}
   var L=d.list,own=d.mine,h=topbar()+'<div class="hero2"><div class="big2">'+esc(L.emoji)+'</div><h2>'+esc(L.title)+'</h2><p>'+(own?'قائمتج':'قائمة '+esc(d.owner?d.owner.display_name:''))+'</p></div>';
-  if(own)h+='<div style="display:flex;gap:8px"><button class="btn" style="margin:0" onclick="shareLink(listUrl(\''+L.id+'\'),\''+esc(L.title).replace(/'/g,'')+'\')">🔗 شاركي القائمة</button><button class="btn alt" style="margin:0" onclick="openForm(null)">+ هدية</button></div><div style="height:14px"></div>';
+  if(own)h+='<div style="display:flex;gap:8px"><button class="btn" style="margin:0" onclick="shareList()">🔗 شاركي القائمة</button><button class="btn alt" style="margin:0" onclick="openForm(null)">+ هدية</button></div><div style="height:14px"></div>';
   if(!d.gifts.length)h+='<div style="text-align:center;padding:24px 0"><div style="font-size:52px">🎀</div><p class="note">'+(own?'ما ضفتي هدايا بعد. اضغطي + هدية.':'القائمة فاضية حالياً')+'</p></div>';
   h+='<div class="grid">';
   d.gifts.forEach(function(g){
@@ -278,15 +284,15 @@ function modalHTML(){
     if(S.data.mine){
       if(x.received&&(x.by||x.message))h+='<div class="ecard"><b>🎁 من '+esc(x.by||'مجهول')+'</b>'+(x.message?'<br>'+esc(x.message):'')+'</div>';
       else if(x.received)h+='<div class="ecard"><b>🎁 من شخص مجهول</b></div>';
-      else if(x.reserved)h+='<div class="ecard">🎀 أحد حجزها لج! ما راح تعرفين منو إلا بعد ما تضغطين "استلمتها".</div>';
+      else if(x.reserved)h+='<div class="ecard">🎀 أحد حجزها لج! ما راح تعرفين منو إلا بعد ما تضغطين "استلمتها".</div><div style="text-align:center"><button class="lnk" style="color:#c4224f" onclick="askRelease(\''+x.id+'\')">'+(S.ask==='rl'?'اضغطي مرة ثانية لتأكيد فكّ الحجز':'تشكّين إنه حجز وهمي؟ فكّي الحجز')+'</button></div>';
       h+=(x.reserved&&!x.received?'<button class="btn" onclick="markGot(\''+x.id+'\')">استلمتها 🎁 (اكشفي الاسم والكارت)</button>':'')+
       '<button class="btn alt" onclick="openForm(\''+x.id+'\')">✏️ تعديل</button><button class="btn danger" onclick="askDelGift(\''+x.id+'\')">'+(S.ask==='dg'?'اضغطي مرة ثانية للتأكيد':'🗑️ حذف')+'</button>';
     }else{
       var tok=lsGet('fmg_tok_'+x.id);
       if(x.received)h+='<div class="ecard">هذي الهدية انستلمت 🎁</div>';
       else if(x.reserved){
-        h+='<div class="ecard">🔒 محجوزة'+(x.by?' من <b>'+esc(x.by)+'</b>':' (من شخص مجهول)')+' — تنتهي بعد '+leftTxt(x.until)+'</div>';
-        if(tok)h+='<button class="btn alt" onclick="cancelRes(\''+x.id+'\')">إلغاء حجزي</button>';
+        if(x.yours&&tok){h+='<div class="ecard">🎀 انتِ حاجزة هذي الهدية — الحجز ينتهي بعد '+leftTxt(x.until)+'</div><button class="btn alt" onclick="cancelRes(\''+x.id+'\')">إلغاء حجزي</button>'}
+        else h+='<div class="ecard">🔒 محجوزة — ترجع متاحة بعد '+leftTxt(x.until)+' إذا ما انشترت</div>';
       }else{
         h+='<label>اسمج (اختياري – اتركيه فاضي تبقين مجهولة)</label><input id="rn" maxlength="40" value="'+esc(lsGet('fmg_name')||'')+'">'+
         '<label>مدة الحجز</label><div class="seg" id="sg">'+[[24,'24 ساعة'],[48,'48 ساعة'],[168,'أسبوع']].map(function(a){return '<button class="'+(S.hours===a[0]?'on':'')+'" onclick="setHours('+a[0]+')">'+a[1]+'</button>'}).join('')+'</div>'+
@@ -315,12 +321,16 @@ function markGot(id){sb.from('gifts').update({received:true}).eq('id',id).then(f
 function reserve(id){
   var nm=$('rn').value.trim(),msg=$('rm').value.trim();
   sb.rpc('reserve_gift',{p_gift:id,p_name:nm,p_message:msg,p_hours:S.hours}).then(function(r){
-    if(r.error){var t=r.error.message||'';$('er').textContent=/taken/.test(t)?'أحد سبقج وحجزها 🙈':/owner/.test(t)?'ما تكدرين تحجزين هدية من قائمتج':'صار خطأ، جربي مرة ثانية';return}
+    if(r.error){var t=r.error.message||'';$('er').textContent=/taken/.test(t)?'أحد سبقج وحجزها 🙈':/owner/.test(t)?'ما تكدرين تحجزين هدية من قائمتج':/limit/.test(t)?'وصلتي الحد المسموح من الحجوزات، جربي بعد شوية':'صار خطأ، جربي مرة ثانية';return}
     lsSet('fmg_tok_'+id,r.data);if(nm)lsSet('fmg_name',nm);toast('تم الحجز 🎀');loadList(S.data.list.id)
   })
 }
 function cancelRes(id){
-  sb.rpc('cancel_reservation',{p_gift:id,p_token:lsGet('fmg_tok_'+id)}).then(function(){toast('تم إلغاء الحجز');loadList(S.data.list.id)})
+  sb.rpc('cancel_reservation',{p_gift:id,p_token:lsGet('fmg_tok_'+id)}).then(function(r){if(r.error)return toast('صار خطأ، جربي مرة ثانية');lsDel('fmg_tok_'+id);toast('تم إلغاء الحجز');S.modal=null;loadList(S.data.list.id)})
+}
+function askRelease(id){
+  if(S.ask!=='rl'){S.ask='rl';vList();return}
+  sb.rpc('release_gift',{p_gift:id}).then(function(r){S.ask='';if(r.error)return toast('صار خطأ');S.modal=null;toast('صارت الهدية متاحة مرة ثانية');loadList(S.data.list.id)})
 }
 
 function vMe(){
@@ -331,7 +341,7 @@ function vMe(){
 
 /* ---------- تحميل البيانات والتنقل ---------- */
 function loadList(id){
-  sb.rpc('get_list',{p_id:id}).then(function(r){S.data=r.error?null:r.data;vList()})
+  sb.rpc('get_list',{p_id:id,p_tokens:myTokens()}).then(function(r){S.data=r.error?null:r.data;vList()})
 }
 function route(){
   if(!sb){vSetup();return}
@@ -339,13 +349,10 @@ function route(){
   S.modal=null;S.ask='';
   if(a==='l'&&b){return loadList(b)}
   if(a==='u'&&b){
-    sb.from('profiles').select('id,username,display_name').eq('username',b.toLowerCase()).maybeSingle().then(function(r){
-      if(!r.data){S.pub=null;return vUser()}
-      sb.from('lists').select('id,title,emoji').eq('owner',r.data.id).order('created_at',{ascending:false}).then(function(q){S.pub={profile:r.data,lists:q.data||[]};vUser()})
-    });return
+    sb.rpc('get_user_page',{p_username:b.toLowerCase()}).then(function(r){S.pub=r.error?null:r.data;vUser()});return
   }
   if(!S.user){
-    if(!sessionStorage.getItem('fmg_sp')&&a===''){return vSplash()}
+    if(!ssGet('fmg_sp')&&a===''){return vSplash()}
     return vAuth()
   }
   if(!S.profile){return vOnboard()}
